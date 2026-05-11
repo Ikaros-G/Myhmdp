@@ -1,0 +1,13 @@
+2026/05/11 19:50:05 [emerg] 18108#29660: CreateDirectory() "F:\dianping-master\nginx-1.18.0/temp/client_body_temp" failed (3: The system cannot find the path specified)
+2026/05/11 19:52:58 [emerg] 11508#6576: CreateDirectory() "F:\dianping-master\nginx-1.18.0/temp/client_body_temp" failed (3: The system cannot find the path specified)
+2026/05/11 19:55:32 [emerg] 19668#7688: CreateDirectory() "F:\dianping-master\nginx-1.18.0/temp/client_body_temp" failed (3: The system cannot find the path specified)
+2026/05/11 19:55:36 [emerg] 25404#16012: CreateDirectory() "F:\dianping-master\nginx-1.18.0/temp/client_body_temp" failed (3: The system cannot find the path specified)
+2026/05/11 19:56:10 [emerg] 12980#29424: CreateDirectory() "F:\dianping-master\nginx-1.18.0/temp/client_body_temp" failed (3: The system cannot find the path specified)
+2026/05/11 19:58:53 [emerg] 9012#12752: CreateDirectory() "F:\dianping-master\nginx-1.18.0/temp/client_body_temp" failed (3: The system cannot find the path specified)
+2026/05/11 19:59:48 [emerg] 24876#3900: CreateDirectory() "F:\dianping-master\nginx-1.18.0/temp/client_body_temp" failed (3: The system cannot find the path specified)
+2026/05/11 19:59:54 [emerg] 28072#17132: CreateDirectory() "F:\dianping-master\nginx-1.18.0/temp/client_body_temp" failed (3: The system cannot find the path specified)
+2026/05/11 20:03:06 [emerg] 15620#26560: CreateDirectory() "F:\dianping-master\nginx-1.18.0/temp/client_body_temp" failed (3: The system cannot find the path specified)
+2026/05/11 20:03:14 [emerg] 18364#19956: CreateDirectory() "F:\dianping-master\nginx-1.18.0/temp/client_body_temp" failed (3: The system cannot find the path specified)
+2026/05/11 20:04:14 [emerg] 3124#8464: CreateDirectory() "F:\dianping-master\nginx-1.18.0/temp/client_body_temp" failed (3: The system cannot find the path specified)
+2026/05/11 20:05:57 [error] 11448#6396: *1 CreateFile() "F:\dianping-master\nginx-1.18.0/html/hmdp/.well-known/appspecific/com.chrome.devtools.json" failed (3: The system cannot find the path specified), client: 127.0.0.1, server: localhost, request: "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1", host: "localhost:8080"
+2026/05/11 20:05:57 [error] 11448#6396: *2 CreateFile() "F:\dianping-master\nginx-1.18.0/html/hmdp/js/axios.min.map" failed (2: The system cannot find the file specified), client: 127.0.0.1, server: localhost, request: "GET /js/axios.min.map HTTP/1.1", host: "localhost:8080"

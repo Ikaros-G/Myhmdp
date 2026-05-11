@@ -1,0 +1,5 @@
+owner: qishibo
+repo: AnotherRedisDesktopManager
+provider: github
+releaseType: prerelease
+updaterCacheDirName: another-redis-desktop-manager-updater
