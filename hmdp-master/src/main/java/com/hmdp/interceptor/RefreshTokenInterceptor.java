@@ -6,6 +6,7 @@ import com.hmdp.dto.UserDTO;
 import com.hmdp.utils.RedisConstants;
 import com.hmdp.utils.UserHolder;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.servlet.http.HttpServletRequest;
@@ -25,7 +26,14 @@ public class RefreshTokenInterceptor implements HandlerInterceptor {
     public RefreshTokenInterceptor(StringRedisTemplate stringRedisTemplate) {
         this.stringRedisTemplate = stringRedisTemplate;
     }
-
+    /**
+     * 前置拦截器
+     * @param request  current HTTP request
+     * @param response current HTTP response
+     * @param handler  chosen handler to execute, for type and/or instance evaluation
+     * @return
+     * @throws Exception
+     */
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         //从请求头中获取token
@@ -44,11 +52,21 @@ public class RefreshTokenInterceptor implements HandlerInterceptor {
         }
         //hash转UserDTO存入ThreadLocal
         UserHolder.saveUser(BeanUtil.fillBeanWithMap(userMap, new UserDTO(), false));
-        //token续命
+        //token失效时间刷新
         stringRedisTemplate.expire(RedisConstants.LOGIN_USER_KEY + token, RedisConstants.LOGIN_USER_TTL, TimeUnit.MINUTES);
         return true;
     }
 
+    /**
+     * 后置拦截器
+     * @param request  current HTTP request
+     * @param response current HTTP response
+     * @param handler  the handler (or {@link HandlerMethod}) that started asynchronous
+     * execution, for type and/or instance examination
+     * @param ex       any exception thrown on handler execution, if any; this does not
+     * include exceptions that have been handled through an exception resolver
+     * @throws Exception
+     */
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
         UserHolder.removeUser();
