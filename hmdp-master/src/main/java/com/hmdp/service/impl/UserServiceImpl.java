@@ -50,65 +50,92 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     @Override
     public Result sendCode(String phone, HttpSession session) {
-        //校验手机号
-        if (RegexUtils.isPhoneInvalid(phone)) {
-            //手机号不符合
+        // 1 验证手机号
+        if (RegexUtils.isPhoneInvalid(phone)){
             return Result.fail("手机号格式错误");
         }
-        //手机号符合,生成验证码
+        // 2 生成验证码
         String code = RandomUtil.randomNumbers(6);
-        /*//保存验证码到session
-        session.setAttribute("code", code);*/
-        //保存验证码到redis
+        // 3 保存到session
+        session.setAttribute("code", code);
+        // 4 保存验证码到redis
         stringRedisTemplate.opsForValue().set(LOGIN_CODE_KEY + phone, code, LOGIN_CODE_TTL, TimeUnit.MINUTES);
-        //发送验证码
         log.debug("发送验证码成功，验证码：{}", code);
-        //返回ok
-        return Result.ok();
+        // 5 返回验证码
+        return Result.ok(code);
     }
+
+    // @Override
+    // public Result login(LoginFormDTO loginForm, HttpSession session) {
+    //     //校验手机号
+    //     String phone = loginForm.getPhone();
+    //     if (RegexUtils.isPhoneInvalid(phone)) {
+    //         //手机号不符合
+    //         return Result.fail("手机号格式错误");
+    //     }
+    //     //从redis中获取验证码 校验验证码
+    //     /*  Object cacheCode = session.getAttribute("code");*/
+    //     String cacheCode = stringRedisTemplate.opsForValue().get(LOGIN_CODE_KEY + phone);
+    //     String code = loginForm.getCode();
+    //     if (cacheCode == null || !cacheCode.equals(code)) {
+    //         //不一致 报错
+    //         return Result.fail("验证码错误");
+    //     }
+    //     //一致 根据手机号查询用户
+    //     User user = baseMapper
+    //             .selectOne(new LambdaQueryWrapper<User>()
+    //                     .eq(User::getPhone, phone));
+    //     //判断用户是否存在
+    //     if (user == null) {
+    //         //不存在 创建新用户
+    //         user = createUserWithPhone(phone);
+    //     }
+    //     /*//保存用户信息到session
+    //     session.setAttribute("user", BeanUtil.copyProperties(user, UserDTO.class));*/
+    //     //生成token
+    //     String token = UUID.randomUUID().toString(true);
+    //     //userDTO转map
+    //     UserDTO userDTO = BeanUtil.copyProperties(user, UserDTO.class);
+    //     Map<String, Object> map = BeanUtil.beanToMap(userDTO, new HashMap<>()
+    //             , CopyOptions.create().setIgnoreNullValue(true)
+    //                     .setFieldValueEditor(
+    //                             (name, value) -> value.toString()
+    //                     ));
+    //     //保存用户信息到redis
+    //     stringRedisTemplate.opsForHash().putAll(LOGIN_USER_KEY + token, map);
+    //     //设置过期时间
+    //     stringRedisTemplate.expire(LOGIN_USER_KEY + token, LOGIN_USER_TTL, TimeUnit.MINUTES);
+    //     return Result.ok(token);
+    // }
 
     @Override
     public Result login(LoginFormDTO loginForm, HttpSession session) {
-        //校验手机号
-        String phone = loginForm.getPhone();
-        if (RegexUtils.isPhoneInvalid(phone)) {
-            //手机号不符合
+        // 1 验证手机号
+        if(RegexUtils.isPhoneInvalid(loginForm.getPhone())){
             return Result.fail("手机号格式错误");
         }
-        //从redis中获取验证码 校验验证码
-        /*  Object cacheCode = session.getAttribute("code");*/
-        String cacheCode = stringRedisTemplate.opsForValue().get(LOGIN_CODE_KEY + phone);
-        String code = loginForm.getCode();
-        if (cacheCode == null || !cacheCode.equals(code)) {
-            //不一致 报错
+        // 2 验证验证码
+        String usercode = loginForm.getCode();
+        String cacheCode = stringRedisTemplate.opsForValue().get(LOGIN_CODE_KEY + loginForm.getPhone());
+        if (cacheCode == null || !cacheCode.equals(usercode)){         // cacheCode == null 验证码超时失效
             return Result.fail("验证码错误");
         }
-        //一致 根据手机号查询用户
-        User user = baseMapper
-                .selectOne(new LambdaQueryWrapper<User>()
-                        .eq(User::getPhone, phone));
-        //判断用户是否存在
-        if (user == null) {
-            //不存在 创建新用户
-            user = createUserWithPhone(phone);
+        // 3 根据手机号查询用户  selete * from user where phone = ?
+        User user = baseMapper.selectOne(
+                new LambdaQueryWrapper<User>()
+                        .eq(User::getPhone, loginForm.getPhone())
+        );
+        // 4 判断用户是否存在
+        if(user == null){
+            // 5 如果不存在，创建新用户
+            user = createUserWithPhone(loginForm.getPhone());
         }
-        /*//保存用户信息到session
-        session.setAttribute("user", BeanUtil.copyProperties(user, UserDTO.class));*/
-        //生成token
-        String token = UUID.randomUUID().toString(true);
-        //userDTO转map
-        UserDTO userDTO = BeanUtil.copyProperties(user, UserDTO.class);
-        Map<String, Object> map = BeanUtil.beanToMap(userDTO, new HashMap<>()
-                , CopyOptions.create().setIgnoreNullValue(true)
-                        .setFieldValueEditor(
-                                (name, value) -> value.toString()
-                        ));
-        //保存用户信息到redis
-        stringRedisTemplate.opsForHash().putAll(LOGIN_USER_KEY + token, map);
-        //设置过期时间
-        stringRedisTemplate.expire(LOGIN_USER_KEY + token, LOGIN_USER_TTL, TimeUnit.MINUTES);
-        return Result.ok(token);
+        // 6 保存用户信息到session
+        session.setAttribute("user", user);
+        // 7 结束
+        return Result.ok();
     }
+
 
     @Override
     public Result sign() {
@@ -171,7 +198,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     private User createUserWithPhone(String phone) {
         User user = new User();
         user.setPhone(phone);
-        //生成随机昵称
+        // 生成随机昵称
         user.setNickName(USER_NICK_NAME_PREFIX + RandomUtil.randomString(10));
         baseMapper.insert(user);
         return user;
