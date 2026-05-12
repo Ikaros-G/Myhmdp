@@ -1,6 +1,8 @@
 package com.hmdp.service.impl;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hmdp.dto.Result;
@@ -42,19 +44,39 @@ public class ShopServiceImpl extends ServiceImpl<ShopMapper, Shop> implements IS
     @Resource
     private CacheClient cacheClient;
 
+//     @Override
+//     public Result queryById(Long id) {
+//         //缓存穿透
+// //        Shop shop = queryWithPassThrough(id);
+// //        Shop shop = cacheClient.queryWithPassThrough(CACHE_SHOP_KEY, id, Shop.class, this::getById, CACHE_SHOP_TTL, TimeUnit.MINUTES);
+//         //互斥锁解决缓存击穿
+// //        Shop shop = queryWithMutex(id);
+//         //逻辑过期解决缓存击穿
+// //        Shop shop = queryWithLogicalExpire(id);
+//         Shop shop = cacheClient.queryWithLogicalExpire(CACHE_SHOP_KEY, id, Shop.class, this::getById, CACHE_SHOP_TTL, TimeUnit.MINUTES);
+//         if (shop == null) {
+//             return Result.fail("店铺不存在");
+//         }
+//         return Result.ok(shop);
+//     }
     @Override
     public Result queryById(Long id) {
-        //缓存穿透
-//        Shop shop = queryWithPassThrough(id);
-//        Shop shop = cacheClient.queryWithPassThrough(CACHE_SHOP_KEY, id, Shop.class, this::getById, CACHE_SHOP_TTL, TimeUnit.MINUTES);
-        //互斥锁解决缓存击穿
-//        Shop shop = queryWithMutex(id);
-        //逻辑过期解决缓存击穿
-//        Shop shop = queryWithLogicalExpire(id);
-        Shop shop = cacheClient.queryWithLogicalExpire(CACHE_SHOP_KEY, id, Shop.class, this::getById, CACHE_SHOP_TTL, TimeUnit.MINUTES);
-        if (shop == null) {
+        // 1 查询缓存
+        String cacheshop = stringRedisTemplate.opsForValue().get(CACHE_SHOP_KEY + id);
+        // 2 判断是否存在
+        if (StrUtil.isBlank(cacheshop)){
+            // 3 如果存在 返回java对象
+            return Result.ok(JSONUtil.toBean(cacheshop, Shop.class));
+        }
+        // 4 不存在，查询数据库
+        Shop shop = getById(id);
+        // 5 不存在，返回错误
+        if (shop == null){
             return Result.fail("店铺不存在");
         }
+        // 6 写入缓存
+        stringRedisTemplate.opsForValue().set(CACHE_SHOP_KEY + id, JSONUtil.toJsonStr(shop));
+        // 结束
         return Result.ok(shop);
     }
 
