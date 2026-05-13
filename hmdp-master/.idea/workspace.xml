@@ -4,16 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6ba2dd4a-f126-4df7-ba82-9fc9067b693c" name="更改" comment="完善登录验证功能">
+    <list default="true" id="6ba2dd4a-f126-4df7-ba82-9fc9067b693c" name="更改" comment="添加商铺缓存功能">
       <change beforePath="$PROJECT_DIR$/../Redis-x64-5.0.14/dump.rdb" beforeDir="false" afterPath="$PROJECT_DIR$/../Redis-x64-5.0.14/dump.rdb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/hmdp/interceptor/LoginInterceptor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hmdp/interceptor/LoginInterceptor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/hmdp/service/impl/ShopServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hmdp/service/impl/ShopServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/hmdp/service/impl/ShopTypeServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hmdp/service/impl/ShopTypeServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/hmdp/config/MvcConfig.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hmdp/config/MvcConfig.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/hmdp/interceptor/LoginInterceptor.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hmdp/interceptor/LoginInterceptor.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/hmdp/interceptor/RefreshTokenInterceptor.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hmdp/interceptor/RefreshTokenInterceptor.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/hmdp/service/impl/ShopServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hmdp/service/impl/ShopServiceImpl.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/com/hmdp/service/impl/ShopTypeServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hmdp/service/impl/ShopTypeServiceImpl.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -104,7 +97,7 @@
       <updated>1778496650899</updated>
       <workItem from="1778496653218" duration="2404000" />
       <workItem from="1778499095112" duration="2283000" />
-      <workItem from="1778546470276" duration="22936000" />
+      <workItem from="1778546470276" duration="25979000" />
     </task>
     <task id="LOCAL-00001" summary="完成短信登录功能">
       <option name="closed" value="true" />
@@ -122,7 +115,15 @@
       <option name="project" value="LOCAL" />
       <updated>1778576382027</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="添加商铺缓存功能">
+      <option name="closed" value="true" />
+      <created>1778588689477</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1778588689477</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -131,6 +132,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="完成短信登录功能" />
     <MESSAGE value="完善登录验证功能" />
-    <option name="LAST_COMMIT_MESSAGE" value="完善登录验证功能" />
+    <MESSAGE value="添加商铺缓存功能" />
+    <option name="LAST_COMMIT_MESSAGE" value="添加商铺缓存功能" />
   </component>
 </project>
