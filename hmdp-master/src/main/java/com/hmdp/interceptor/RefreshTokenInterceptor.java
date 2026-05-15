@@ -3,7 +3,7 @@ package com.hmdp.interceptor;
 import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.hmdp.dto.UserDTO;
-import com.hmdp.utils.RedisConstants;
+import com.hmdp.constants.RedisConstants;
 import com.hmdp.utils.UserHolder;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.method.HandlerMethod;

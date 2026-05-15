@@ -7,7 +7,6 @@ import com.hmdp.HmDianPingApplication;
 import com.hmdp.dto.UserDTO;
 import com.hmdp.entity.User;
 import com.hmdp.mapper.UserMapper;
-import com.hmdp.service.impl.UserServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -20,9 +19,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import static com.hmdp.utils.RedisConstants.LOGIN_USER_KEY;
-import static com.hmdp.utils.RedisConstants.LOGIN_USER_TTL;
-import static com.hmdp.utils.SystemConstants.USER_NICK_NAME_PREFIX;
+import static com.hmdp.constants.RedisConstants.LOGIN_USER_KEY;
+import static com.hmdp.constants.RedisConstants.LOGIN_USER_TTL;
+import static com.hmdp.constants.SystemConstants.USER_NICK_NAME_PREFIX;
 
 @SpringBootTest(classes = HmDianPingApplication.class)
 public class LoginTest {
