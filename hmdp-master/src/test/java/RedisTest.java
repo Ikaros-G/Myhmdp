@@ -10,6 +10,8 @@ import org.springframework.data.redis.connection.RedisGeoCommands;
 import org.springframework.data.redis.core.StringRedisTemplate;
 
 import javax.annotation.Resource;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -39,6 +41,14 @@ public class RedisTest {
         for (Shop shop : shopList) {
             cacheClient.setWithLogicalExpire(CACHE_SHOP_KEY + shop.getId(), shop, 30L, TimeUnit.MINUTES);
         }
+    }
+    @Test
+    public void dateTest() {
+        // 构造 2026-05-15 00:00:00
+        LocalDateTime dateTime = LocalDateTime.of(2026, 5, 15, 0, 0, 0);
+        // 转 秒级时间戳
+        long secondTs = dateTime.toEpochSecond(ZoneOffset.ofHours(8));
+        System.out.println("2026-05-15 00:00:00 秒级时间戳：" + secondTs);
     }
 
     @Test

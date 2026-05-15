@@ -139,7 +139,7 @@ public class CacheClient {
         return r;
     }
 
-    public <R, ID> R queryWithLogicalExpire(String KeyPrefix, ID id, Class<R> type, String lockKey,Function<ID,R> dbFallback, Long time, TimeUnit unit) {
+    public <R, ID> R queryWithLogicalExpire(String KeyPrefix, ID id, Class<R> type, String lockKey, Function<ID,R> dbFallback, Long time, TimeUnit unit) {
         // 1 查询缓存
         String cacheshop = stringRedisTemplate.opsForValue().get(KeyPrefix + id);
         // 2 判断是否命中

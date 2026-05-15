@@ -4,40 +4,19 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6ba2dd4a-f126-4df7-ba82-9fc9067b693c" name="更改" comment="添加商铺缓存功能">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/hmdp/entity/RedisDate.java" afterDir="false" />
+    <list default="true" id="6ba2dd4a-f126-4df7-ba82-9fc9067b693c" name="更改" comment="解决商铺缓存穿透、击穿问题">
       <change beforePath="$PROJECT_DIR$/../Redis-x64-5.0.14/dump.rdb" beforeDir="false" afterPath="$PROJECT_DIR$/../Redis-x64-5.0.14/dump.rdb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/hmdp/controller/BlogController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hmdp/controller/BlogController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/hmdp/controller/ShopController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hmdp/controller/ShopController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/hmdp/controller/UploadController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hmdp/controller/UploadController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/hmdp/interceptor/RefreshTokenInterceptor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hmdp/interceptor/RefreshTokenInterceptor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/hmdp/service/impl/BlogServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hmdp/service/impl/BlogServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/hmdp/service/impl/FollowServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hmdp/service/impl/FollowServiceImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/hmdp/service/impl/ShopServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hmdp/service/impl/ShopServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/hmdp/service/impl/ShopTypeServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hmdp/service/impl/ShopTypeServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/hmdp/service/impl/UserServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hmdp/service/impl/UserServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/hmdp/service/impl/VoucherServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hmdp/service/impl/VoucherServiceImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/hmdp/utils/CacheClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hmdp/utils/CacheClient.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/hmdp/utils/RedisConstants.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hmdp/constants/RedisConstants.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/hmdp/utils/SystemConstants.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hmdp/constants/SystemConstants.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/application.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/LoginTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/LoginTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/hmdp/utils/RedisIdWorker.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hmdp/utils/RedisIdWorker.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/java/RedisTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/RedisTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/application.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/application.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/hmdp/controller/BlogController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hmdp/controller/BlogController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/hmdp/controller/ShopController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hmdp/controller/ShopController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/hmdp/controller/UploadController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hmdp/controller/UploadController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/hmdp/interceptor/RefreshTokenInterceptor.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hmdp/interceptor/RefreshTokenInterceptor.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/hmdp/service/impl/BlogServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hmdp/service/impl/BlogServiceImpl.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/hmdp/service/impl/FollowServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hmdp/service/impl/FollowServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/RedissonTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/RedissonTest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/com/hmdp/service/impl/ShopServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hmdp/service/impl/ShopServiceImpl.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/hmdp/service/impl/ShopTypeServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hmdp/service/impl/ShopTypeServiceImpl.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/hmdp/service/impl/UserServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hmdp/service/impl/UserServiceImpl.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/hmdp/service/impl/VoucherServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hmdp/service/impl/VoucherServiceImpl.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/com/hmdp/utils/CacheClient.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hmdp/utils/CacheClient.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/hmdp/utils/RedisConstants.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/hmdp/utils/SystemConstants.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hmdp/utils/RedisIdWorker.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hmdp/utils/RedisIdWorker.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../nginx-1.18.0/logs/access.log" beforeDir="false" afterPath="$PROJECT_DIR$/../nginx-1.18.0/logs/access.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../nginx-1.18.0/logs/error.log" beforeDir="false" afterPath="$PROJECT_DIR$/../nginx-1.18.0/logs/error.log" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -77,6 +56,10 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "JUnit.RedisTest.dateTest.executor": "Run",
+    "JUnit.RedisTest.testIdWorker.executor": "Run",
+    "JUnit.RedisTest.testLoadShopData.executor": "Run",
+    "JUnit.RedisTest.testSaveShop.executor": "Run",
     "Maven.hmdp [compile].executor": "Run",
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RequestMappingsPanelOrder0": "0",
@@ -97,7 +80,8 @@
     "project.structure.proportion": "0.0",
     "project.structure.side.proportion": "0.0",
     "settings.editor.selected.configurable": "project.propVCSSupport.DirectoryMappings",
-    "vue.rearranger.settings.migration": "true"
+    "vue.rearranger.settings.migration": "true",
+    "应用程序.RedisIdWorker.executor": "Run"
   },
   "keyToStringList": {
     "DatabaseDriversLRU": [
@@ -105,7 +89,60 @@
     ]
   }
 }]]></component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Spring Boot.HmDianPingApplication">
+    <configuration name="RedisIdWorker" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.hmdp.utils.RedisIdWorker" />
+      <module name="hmdp" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.hmdp.utils.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="RedisTest.dateTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="hmdp" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="MAIN_CLASS_NAME" value="RedisTest" />
+      <option name="METHOD_NAME" value="dateTest" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="RedisTest.testIdWorker" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="hmdp" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="MAIN_CLASS_NAME" value="RedisTest" />
+      <option name="METHOD_NAME" value="testIdWorker" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="RedisTest.testLoadShopData" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="hmdp" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="MAIN_CLASS_NAME" value="RedisTest" />
+      <option name="METHOD_NAME" value="testLoadShopData" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="RedisTest.testSaveShop" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="hmdp" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="MAIN_CLASS_NAME" value="RedisTest" />
+      <option name="METHOD_NAME" value="testSaveShop" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration default="true" type="JetRunConfigurationType">
       <module name="hmdp-master" />
       <method v="2">
@@ -124,6 +161,15 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="JUnit.RedisTest.testLoadShopData" />
+        <item itemvalue="JUnit.RedisTest.testIdWorker" />
+        <item itemvalue="JUnit.RedisTest.dateTest" />
+        <item itemvalue="JUnit.RedisTest.testSaveShop" />
+        <item itemvalue="应用程序.RedisIdWorker" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="默认任务">
@@ -134,7 +180,7 @@
       <updated>1778496650899</updated>
       <workItem from="1778496653218" duration="2404000" />
       <workItem from="1778499095112" duration="2283000" />
-      <workItem from="1778546470276" duration="51865000" />
+      <workItem from="1778546470276" duration="59954000" />
     </task>
     <task id="LOCAL-00001" summary="完成短信登录功能">
       <option name="closed" value="true" />
@@ -168,7 +214,15 @@
       <option name="project" value="LOCAL" />
       <updated>1778635932165</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="解决商铺缓存穿透、击穿问题">
+      <option name="closed" value="true" />
+      <created>1778806723369</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1778806723369</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -178,6 +232,7 @@
     <MESSAGE value="完成短信登录功能" />
     <MESSAGE value="完善登录验证功能" />
     <MESSAGE value="添加商铺缓存功能" />
-    <option name="LAST_COMMIT_MESSAGE" value="添加商铺缓存功能" />
+    <MESSAGE value="解决商铺缓存穿透、击穿问题" />
+    <option name="LAST_COMMIT_MESSAGE" value="解决商铺缓存穿透、击穿问题" />
   </component>
 </project>

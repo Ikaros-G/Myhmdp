@@ -19,7 +19,7 @@ public class RedisIdWorker {
     /**
      * 初始时间戳
      */
-    private static final Long BEGIN_TIMESTAMP = 1640995200L;
+    private static final Long BEGIN_TIMESTAMP = 1778774400L;
     /**
      * 序列号位数
      */
@@ -29,23 +29,19 @@ public class RedisIdWorker {
     private StringRedisTemplate stringRedisTemplate;
 
     /**
-     * 获取id
+     * 生成全局唯一id
      *
-     * @param keyPrefix 业务前缀
+     * @param keyPrefix 前缀
      * @return {@link Long}
      */
     public Long nextId(String keyPrefix) {
-        //生成时间戳
-        LocalDateTime now = LocalDateTime.now();
-        long nowSecond = now.toEpochSecond(ZoneOffset.UTC);
-        long timestamp = nowSecond - BEGIN_TIMESTAMP;
-        //生成序列号
-        //生成当前日期 精确到天
-        String today = now.format(DateTimeFormatter.ofPattern("yyyyMMdd"));
-        //自增长
-        Long count = stringRedisTemplate.opsForValue().increment("icr:" + keyPrefix + ":" + today);
-        //拼接并返回
-        return timestamp << COUNT_BITS|count ;
+        // 生成时间戳差值
+        long timestamp = System.currentTimeMillis() / 1000 - BEGIN_TIMESTAMP;
+        // 生成序列号
+        String date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy:MM:dd"));
+        Long SerialNumber = stringRedisTemplate.opsForValue().increment("icr:" + keyPrefix + ":" + date);
+        // 返回 0 + 时间戳 + 序列化
+        return timestamp << COUNT_BITS | SerialNumber;
     }
 
 }
