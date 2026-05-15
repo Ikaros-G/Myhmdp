@@ -28,10 +28,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import java.time.Duration;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.time.LocalDateTime;
+import java.util.*;
 import java.util.concurrent.*;
 
 /**
@@ -172,32 +170,75 @@ public class VoucherOrderServiceImpl extends ServiceImpl<VoucherOrderMapper, Vou
     }
 
     /**
+     * 秒杀优惠券(乐观锁)
+     * @param voucherId 优惠券id
+     * @return 订单id
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public Result seckillVoucher(Long voucherId) {
+        // 判断优惠券是否在秒杀中
+        SeckillVoucher vouchers = seckillVoucherService.getById(voucherId);
+        if(vouchers.getBeginTime().isAfter(LocalDateTime.now())){
+            return Result.fail("秒杀尚未开始");
+        }
+        if(vouchers.getEndTime().isBefore(LocalDateTime.now())){
+            return Result.fail("秒杀已结束");
+        }
+        // 判断优惠券库存是否充足
+        if(vouchers.getStock() < 1){
+            return Result.fail("库存不足");
+        }
+        // 乐观锁，判断库存是否更新
+        boolean success = seckillVoucherService.update()
+                .setSql("stock = stock - 1")
+                .eq("voucher_id", voucherId).gt("stock", 0)
+                .update();
+        // 如果不成功，则说明已有线程更新库存，则返回失败
+        if(!success){
+            return Result.fail("库存已被更新");
+        }
+        // 创建订单
+        VoucherOrder voucherOrder = new VoucherOrder();
+        voucherOrder.setUserId(UserHolder.getUser().getId());
+        voucherOrder.setVoucherId(voucherId);
+        Long orderOId = redisIdWorker.nextId("order");
+        voucherOrder.setId(orderOId);
+        save(voucherOrder);
+
+        // 返回订单id
+        return Result.ok(orderOId);
+    }
+
+    /**
      * 秒杀优惠券(消息队列)
      *
      * @param voucherId 券id
      * @return {@link Result}
      */
-    @Override
-    public Result seckillVoucher(Long voucherId) {
-        //获取用户
-        UserDTO user = UserHolder.getUser();
-        //获取订单id
-        Long orderId = redisIdWorker.nextId("order");
-        //执行lua脚本
-        Long res = stringRedisTemplate.execute(
-                SECKILL_SCRIPT
-                , Collections.emptyList()
-                , voucherId.toString()
-                , user.getId().toString()
-                , orderId.toString());
-        //判断结果是否为0
-        int r = res.intValue();
-        if (r != 0) {
-            //不为0 没有购买资格
-            return Result.fail(r == 1 ? "库存不足" : "禁止重复下单");
-        }
-        return Result.ok(orderId);
-    }
+    // @Override
+    // public Result seckillVoucher(Long voucherId) {
+    //     //获取用户
+    //     UserDTO user = UserHolder.getUser();
+    //     //获取订单id
+    //     Long orderId = redisIdWorker.nextId("order");
+    //     //执行lua脚本
+    //     Long res = stringRedisTemplate.execute(
+    //             SECKILL_SCRIPT
+    //             , Collections.emptyList()
+    //             , voucherId.toString()
+    //             , user.getId().toString()
+    //             , orderId.toString());
+    //     //判断结果是否为0
+    //     int r = res.intValue();
+    //     if (r != 0) {
+    //         //不为0 没有购买资格
+    //         return Result.fail(r == 1 ? "库存不足" : "禁止重复下单");
+    //     }
+    //     return Result.ok(orderId);
+    // }
+
+
     /**
      * 秒杀优惠券(异步)
      *
