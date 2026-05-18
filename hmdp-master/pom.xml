@@ -65,7 +65,14 @@
             <artifactId>redisson</artifactId>
             <version>3.17.7</version>
         </dependency>
+        <!-- AspectJ 依赖 -->
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjweaver</artifactId>
+            <version>1.9.19</version>
+        </dependency>
     </dependencies>
+
 
     <build>
         <plugins>

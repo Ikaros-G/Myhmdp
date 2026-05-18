@@ -3,6 +3,7 @@ package com.hmdp;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 
 /**
  * 启动类
@@ -11,6 +12,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @date 2022/10/07
  */
 @MapperScan("com.hmdp.mapper")
+@EnableAspectJAutoProxy(exposeProxy = true)
 @SpringBootApplication
 public class HmDianPingApplication {
 

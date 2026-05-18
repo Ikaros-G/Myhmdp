@@ -11,11 +11,13 @@ import com.hmdp.mapper.VoucherOrderMapper;
 import com.hmdp.service.ISeckillVoucherService;
 import com.hmdp.service.IVoucherOrderService;
 import com.hmdp.utils.RedisIdWorker;
+import com.hmdp.utils.SimpleRedisLock;
 import com.hmdp.utils.UserHolder;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
+import org.springframework.aop.framework.AopContext;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.redis.connection.stream.*;
@@ -170,7 +172,7 @@ public class VoucherOrderServiceImpl extends ServiceImpl<VoucherOrderMapper, Vou
     }
 
     /**
-     * 秒杀优惠券(乐观锁)
+     * 秒杀优惠券
      * @param voucherId 优惠券id
      * @return 订单id
      */
@@ -189,6 +191,34 @@ public class VoucherOrderServiceImpl extends ServiceImpl<VoucherOrderMapper, Vou
         if(vouchers.getStock() < 1){
             return Result.fail("库存不足");
         }
+        Long userid = UserHolder.getUser().getId();
+        // // 悲观锁
+        // synchronized (userid.toString().intern()){
+        //     // 获取事务代理对象
+        //     IVoucherOrderService proxy = (IVoucherOrderService) AopContext.currentProxy();
+        //     // getResult实现一人一单
+        //     return proxy.getResult(voucherId);
+        // }
+
+        // 全局锁
+        SimpleRedisLock simpleRedisLock = new SimpleRedisLock(userid, stringRedisTemplate);
+        boolean lock = simpleRedisLock.tryLock(1000L);
+        if(!lock){
+            return Result.fail("不允许重复下单");
+        }
+        return getResult(voucherId);
+    }
+    @Transactional(rollbackFor = Exception.class)
+    public Result getResult(Long voucherId) {
+
+        // 一人一单
+        VoucherOrder voucherOrder = new VoucherOrder();
+        Long userid = UserHolder.getUser().getId();
+        Long orderNumber = query().eq("user_id", userid).count();
+        // 查询用户是否已购
+        if(orderNumber > 0){
+            return Result.fail("您已购买过此优惠券");
+        }
         // 乐观锁，判断库存是否更新
         boolean success = seckillVoucherService.update()
                 .setSql("stock = stock - 1")
@@ -196,17 +226,14 @@ public class VoucherOrderServiceImpl extends ServiceImpl<VoucherOrderMapper, Vou
                 .update();
         // 如果不成功，则说明已有线程更新库存，则返回失败
         if(!success){
-            return Result.fail("库存已被更新");
+            return Result.fail("库存不足");
         }
         // 创建订单
-        VoucherOrder voucherOrder = new VoucherOrder();
-        voucherOrder.setUserId(UserHolder.getUser().getId());
+        voucherOrder.setUserId(userid);
         voucherOrder.setVoucherId(voucherId);
         Long orderOId = redisIdWorker.nextId("order");
         voucherOrder.setId(orderOId);
         save(voucherOrder);
-
-        // 返回订单id
         return Result.ok(orderOId);
     }
 
@@ -323,39 +350,40 @@ public class VoucherOrderServiceImpl extends ServiceImpl<VoucherOrderMapper, Vou
             lock.unlock();
         }
     }*/
-    @Override
-    @NotNull
-    @Transactional(rollbackFor = Exception.class)
-    public Result getResult(Long voucherId) {
-        //是否下单
-        Long userId = UserHolder.getUser().getId();
-        Long count = lambdaQuery()
-                .eq(VoucherOrder::getVoucherId, voucherId)
-                .eq(VoucherOrder::getUserId, userId)
-                .count();
-        if (count > 0) {
-            return Result.fail("禁止重复购买");
-        }
-        //扣减库存
-        boolean isSuccess = seckillVoucherService.update(
-                new LambdaUpdateWrapper<SeckillVoucher>()
-                        .eq(SeckillVoucher::getVoucherId, voucherId)
-                        .gt(SeckillVoucher::getStock, 0)
-                        .setSql("stock=stock-1"));
-        if (!isSuccess) {
-            //库存不足
-            return Result.fail("库存不足");
-        }
-        //创建订单
-        VoucherOrder voucherOrder = new VoucherOrder();
-        Long orderId = redisIdWorker.nextId("order");
-        voucherOrder.setVoucherId(voucherId);
-        voucherOrder.setUserId(UserHolder.getUser().getId());
-        voucherOrder.setId(orderId);
-        this.save(voucherOrder);
-        //返回订单id
-        return Result.ok(orderId);
-    }
+
+    // @Override
+    // @NotNull
+    // @Transactional(rollbackFor = Exception.class)
+    // public Result getResult(Long voucherId) {
+    //     //是否下单
+    //     Long userId = UserHolder.getUser().getId();
+    //     Long count = lambdaQuery()
+    //             .eq(VoucherOrder::getVoucherId, voucherId)
+    //             .eq(VoucherOrder::getUserId, userId)
+    //             .count();
+    //     if (count > 0) {
+    //         return Result.fail("禁止重复购买");
+    //     }
+    //     //扣减库存
+    //     boolean isSuccess = seckillVoucherService.update(
+    //             new LambdaUpdateWrapper<SeckillVoucher>()
+    //                     .eq(SeckillVoucher::getVoucherId, voucherId)
+    //                     .gt(SeckillVoucher::getStock, 0)
+    //                     .setSql("stock=stock-1"));
+    //     if (!isSuccess) {
+    //         //库存不足
+    //         return Result.fail("库存不足");
+    //     }
+    //     //创建订单
+    //     VoucherOrder voucherOrder = new VoucherOrder();
+    //     Long orderId = redisIdWorker.nextId("order");
+    //     voucherOrder.setVoucherId(voucherId);
+    //     voucherOrder.setUserId(UserHolder.getUser().getId());
+    //     voucherOrder.setId(orderId);
+    //     this.save(voucherOrder);
+    //     //返回订单id
+    //     return Result.ok(orderId);
+    // }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
