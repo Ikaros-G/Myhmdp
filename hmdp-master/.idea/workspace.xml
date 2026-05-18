@@ -4,14 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6ba2dd4a-f126-4df7-ba82-9fc9067b693c" name="更改" comment="全局唯一锁解决并发问题">
+    <list default="true" id="6ba2dd4a-f126-4df7-ba82-9fc9067b693c" name="更改" comment="Lua脚本实现锁释放原子性">
       <change beforePath="$PROJECT_DIR$/../Redis-x64-5.0.14/dump.rdb" beforeDir="false" afterPath="$PROJECT_DIR$/../Redis-x64-5.0.14/dump.rdb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/hmdp/config/RedissonConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hmdp/config/RedissonConfig.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/hmdp/service/impl/VoucherOrderServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hmdp/service/impl/VoucherOrderServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/hmdp/utils/SimpleRedisLock.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hmdp/utils/SimpleRedisLock.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/unlock.lua" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/unlock.lua" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/hmdp/utils/SimpleRedisLock.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hmdp/utils/SimpleRedisLock.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hmdp/config/RedissonConfig.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hmdp/config/RedissonConfig.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hmdp/service/impl/VoucherOrderServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hmdp/service/impl/VoucherOrderServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/unlock.lua" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/unlock.lua" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../nginx-1.18.0/logs/nginx.pid" beforeDir="false" afterPath="$PROJECT_DIR$/../nginx-1.18.0/logs/nginx.pid" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -42,7 +41,7 @@
   }
 }</component>
   <component name="ProblemsViewState">
-    <option name="selectedTabId" value="ProjectErrors" />
+    <option name="selectedTabId" value="CurrentFile" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;customColor&quot;: &quot;&quot;,
@@ -55,7 +54,7 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    "JUnit.RedisTest.dateTest.executor": "Run",
+    "JUnit.RedisTest.dateTest.executor": "Debug",
     "JUnit.RedisTest.testIdWorker.executor": "Run",
     "JUnit.RedisTest.testLoadShopData.executor": "Run",
     "JUnit.RedisTest.testSaveShop.executor": "Run",
@@ -81,6 +80,7 @@
     "project.structure.side.proportion": "0.0",
     "settings.editor.selected.configurable": "project.propVCSSupport.DirectoryMappings",
     "vue.rearranger.settings.migration": "true",
+    "应用程序.HmDianPingApplication.executor": "Run",
     "应用程序.RedisIdWorker.executor": "Run"
   },
   "keyToStringList": {
@@ -100,7 +100,6 @@
         <entry key="SpringBootApplicationConfigurationType">
           <value>
             <map>
-              <entry key="HmDianPingApplication" value="STOPPED" />
               <entry key="HmDianPingApplication2" value="STOPPED" />
             </map>
           </value>
@@ -108,13 +107,13 @@
       </map>
     </option>
   </component>
-  <component name="RunManager" selected="Spring Boot.HmDianPingApplication">
-    <configuration name="RedisIdWorker" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="com.hmdp.utils.RedisIdWorker" />
+  <component name="RunManager" selected="应用程序.HmDianPingApplication">
+    <configuration name="HmDianPingApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.hmdp.HmDianPingApplication" />
       <module name="hmdp" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="com.hmdp.utils.*" />
+          <option name="PATTERN" value="com.hmdp.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -190,11 +189,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="应用程序.HmDianPingApplication" />
+        <item itemvalue="JUnit.RedisTest.dateTest" />
         <item itemvalue="JUnit.RedisTest.testLoadShopData" />
         <item itemvalue="JUnit.RedisTest.testIdWorker" />
-        <item itemvalue="JUnit.RedisTest.dateTest" />
         <item itemvalue="JUnit.RedisTest.testSaveShop" />
-        <item itemvalue="应用程序.RedisIdWorker" />
       </list>
     </recent_temporary>
   </component>
@@ -207,7 +206,7 @@
       <updated>1778496650899</updated>
       <workItem from="1778496653218" duration="2404000" />
       <workItem from="1778499095112" duration="2283000" />
-      <workItem from="1778546470276" duration="88695000" />
+      <workItem from="1778546470276" duration="89728000" />
     </task>
     <task id="LOCAL-00001" summary="完成短信登录功能">
       <option name="closed" value="true" />
@@ -273,7 +272,15 @@
       <option name="project" value="LOCAL" />
       <updated>1779064949820</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="Lua脚本实现锁释放原子性">
+      <option name="closed" value="true" />
+      <created>1779072505278</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1779072505278</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -298,17 +305,7 @@
     <MESSAGE value="实现全局唯一ID" />
     <MESSAGE value="乐观锁解决炒卖问题" />
     <MESSAGE value="全局唯一锁解决并发问题" />
-    <option name="LAST_COMMIT_MESSAGE" value="全局唯一锁解决并发问题" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/hmdp/service/impl/VoucherOrderServiceImpl.java</url>
-          <line>203</line>
-          <option name="timeStamp" value="28" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
+    <MESSAGE value="Lua脚本实现锁释放原子性" />
+    <option name="LAST_COMMIT_MESSAGE" value="Lua脚本实现锁释放原子性" />
   </component>
 </project>

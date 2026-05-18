@@ -200,11 +200,24 @@ public class VoucherOrderServiceImpl extends ServiceImpl<VoucherOrderMapper, Vou
         //     return proxy.getResult(voucherId);
         // }
 
-        // 全局锁
-        SimpleRedisLock simpleRedisLock = new SimpleRedisLock(userid, stringRedisTemplate);
+        // 方案1：自定义分布式全局锁
+        // SimpleRedisLock simpleRedisLock = new SimpleRedisLock(userid, stringRedisTemplate);
+        // boolean lock = simpleRedisLock.tryLock(1000L);
+        // if (!lock) {
+        //     return Result.fail("不允许重复下单");
+        // }
+        // try {
+        //     // 获取事务代理对象
+        //     IVoucherOrderService proxy = (IVoucherOrderService) AopContext.currentProxy();
+        //     // getResult实现一人一单
+        //     return proxy.getResult(voucherId);
+        // } finally {
+        //     simpleRedisLock.unLock();
+        // }
 
-        boolean lock = simpleRedisLock.tryLock(1000L);
-        if (!lock) {
+        // 方案2：Redission 锁
+        RLock lock = redissonClient.getLock("lock:order:" + userid);
+        if (!lock.tryLock()) {
             return Result.fail("不允许重复下单");
         }
         try {
@@ -213,8 +226,10 @@ public class VoucherOrderServiceImpl extends ServiceImpl<VoucherOrderMapper, Vou
             // getResult实现一人一单
             return proxy.getResult(voucherId);
         } finally {
-            simpleRedisLock.unLock();
+            lock.unlock();
         }
+
+
     }
     @Transactional(rollbackFor = Exception.class)
     public Result getResult(Long voucherId) {
