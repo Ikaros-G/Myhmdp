@@ -15,6 +15,7 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 public class RedissonConfig {
+
     @Value("${spring.redis.host}")
     private String host;
     @Value("${spring.redis.port}")
@@ -23,10 +24,11 @@ public class RedissonConfig {
     private String password;
     @Bean
     public RedissonClient redissonClient(){
-        //配置
+        // 创建配置对象
         Config config=new Config();
-        config.useSingleServer().setAddress("redis://"+host+":"+port).setPassword(password);
-        //创建对并且返回
+        // 创建单机模式的配置
+        config.useSingleServer().setAddress("redis://"+ host +":"+port).setPassword(password);
+        config.useSingleServer().setDatabase(0);    // 选择数据库
         return Redisson.create(config);
     }
 

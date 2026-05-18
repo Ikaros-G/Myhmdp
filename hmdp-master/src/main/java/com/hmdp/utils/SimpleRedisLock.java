@@ -25,13 +25,14 @@ public class SimpleRedisLock implements ILock {
         this.name = userid.toString();
         this.stringRedisTemplate = stringRedisTemplate;
     }
-    // private static final DefaultRedisScript<Long> UNLOCK_SCRIPT;
 
-    // static {
-    //     UNLOCK_SCRIPT=new DefaultRedisScript<>();
-    //     UNLOCK_SCRIPT.setLocation(new ClassPathResource("unlock.lua"));
-    //     UNLOCK_SCRIPT.setResultType(Long.class);
-    // }
+    private static final DefaultRedisScript<Long> UNLOCK_SCRIPT;
+    static {
+        UNLOCK_SCRIPT = new DefaultRedisScript<>();
+        UNLOCK_SCRIPT.setLocation(new ClassPathResource("unlock.lua"));
+        UNLOCK_SCRIPT.setResultType(Long.class);
+    }
+
 
     // public SimpleRedisLock(String name, StringRedisTemplate stringRedisTemplate) {
     //     this.name = name;
@@ -82,11 +83,15 @@ public class SimpleRedisLock implements ILock {
 
     @Override
     public void unLock() {
-        // 释放锁
-        String id = ID_PREFIX + Thread.currentThread().getId();
-        if (id.equals(stringRedisTemplate.opsForValue().get(KET_PREFIX + name))){
-            stringRedisTemplate.delete(KET_PREFIX + name);
-        }
+        // // 释放锁
+        // String id = ID_PREFIX + Thread.currentThread().getId();
+        // if (id.equals(stringRedisTemplate.opsForValue().get(KET_PREFIX + name))){
+        //     stringRedisTemplate.delete(KET_PREFIX + name);
+        // }
 
+        // 通过Lua脚本实现原子性
+        stringRedisTemplate.execute(UNLOCK_SCRIPT,
+                Collections.singletonList(KET_PREFIX + name),
+                ID_PREFIX + Thread.currentThread().getId());
     }
 }

@@ -181,14 +181,14 @@ public class VoucherOrderServiceImpl extends ServiceImpl<VoucherOrderMapper, Vou
     public Result seckillVoucher(Long voucherId) {
         // 判断优惠券是否在秒杀中
         SeckillVoucher vouchers = seckillVoucherService.getById(voucherId);
-        if(vouchers.getBeginTime().isAfter(LocalDateTime.now())){
+        if (vouchers.getBeginTime().isAfter(LocalDateTime.now())) {
             return Result.fail("秒杀尚未开始");
         }
-        if(vouchers.getEndTime().isBefore(LocalDateTime.now())){
+        if (vouchers.getEndTime().isBefore(LocalDateTime.now())) {
             return Result.fail("秒杀已结束");
         }
         // 判断优惠券库存是否充足
-        if(vouchers.getStock() < 1){
+        if (vouchers.getStock() < 1) {
             return Result.fail("库存不足");
         }
         Long userid = UserHolder.getUser().getId();
@@ -202,11 +202,19 @@ public class VoucherOrderServiceImpl extends ServiceImpl<VoucherOrderMapper, Vou
 
         // 全局锁
         SimpleRedisLock simpleRedisLock = new SimpleRedisLock(userid, stringRedisTemplate);
+
         boolean lock = simpleRedisLock.tryLock(1000L);
-        if(!lock){
+        if (!lock) {
             return Result.fail("不允许重复下单");
         }
-        return getResult(voucherId);
+        try {
+            // 获取事务代理对象
+            IVoucherOrderService proxy = (IVoucherOrderService) AopContext.currentProxy();
+            // getResult实现一人一单
+            return proxy.getResult(voucherId);
+        } finally {
+            simpleRedisLock.unLock();
+        }
     }
     @Transactional(rollbackFor = Exception.class)
     public Result getResult(Long voucherId) {
