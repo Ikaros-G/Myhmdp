@@ -164,26 +164,6 @@ public class VoucherOrderServiceImpl extends ServiceImpl<VoucherOrderMapper, Vou
         return Result.ok("下单成功");
     }
 
-    private void handleVoucherOrder(VoucherOrder voucherOrder) {
-        Long userId = voucherOrder.getUserId();
-        // 创建锁对象（兜底）
-        RLock lock = redissonClient.getLock("lock:order:" + userId);
-        // 获取锁
-        boolean isLock = lock.tryLock();
-        // 判断是否获取锁成功
-        if (!isLock) {
-            // 获取失败,返回错误或者重试
-            throw new RuntimeException("发送未知错误");
-        }
-        try {
-            // 获取成功
-            // 创建订单
-            createVoucherOrder(voucherOrder);
-        } finally {
-            // 释放锁
-            lock.unlock();
-        }
-    }
 
     // /**
     //  * 秒杀优惠券判断 (阻塞队列)
@@ -238,29 +218,27 @@ public class VoucherOrderServiceImpl extends ServiceImpl<VoucherOrderMapper, Vou
     //         }
     //     });
     // }
-    // /**
-    //  * 消费订单（阻塞队列）
-    //  */
-    // private void handleVoucherOrder(VoucherOrder voucherOrder) {
-    //     Long userId = voucherOrder.getUserId();
-    //     // 创建锁对象（兜底）
-    //     RLock lock = redissonClient.getLock("lock:order:" + userId);
-    //     // 获取锁
-    //     boolean isLock = lock.tryLock();
-    //     // 判断是否获取锁成功
-    //     if (!isLock) {
-    //         // 获取失败,返回错误或者重试
-    //         throw new RuntimeException("发送未知错误");
-    //     }
-    //     try {
-    //         // 获取成功
-    //         // 创建订单
-    //         voucherOrderService.createVoucherOrder(voucherOrder);
-    //     } finally {
-    //         // 释放锁
-    //         lock.unlock();
-    //     }
-    // }
+
+    private void handleVoucherOrder(VoucherOrder voucherOrder) {
+        Long userId = voucherOrder.getUserId();
+        // 创建锁对象（兜底）
+        RLock lock = redissonClient.getLock("lock:order:" + userId);
+        // 获取锁
+        boolean isLock = lock.tryLock();
+        // 判断是否获取锁成功
+        if (!isLock) {
+            // 获取失败,返回错误或者重试
+            throw new RuntimeException("发送未知错误");
+        }
+        try {
+            // 获取成功
+            // 创建订单
+            voucherOrderService.createVoucherOrder(voucherOrder);
+        } finally {
+            // 释放锁
+            lock.unlock();
+        }
+    }
 
     // /**
     //  * 秒杀优惠券 (自定义分布式全局锁/redission)
