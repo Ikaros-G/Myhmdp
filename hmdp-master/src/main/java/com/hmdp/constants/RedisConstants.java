@@ -21,6 +21,8 @@ public class RedisConstants {
     public static final String FEED_KEY = "feed:";
     public static final String SHOP_GEO_KEY = "shop:geo:";
     public static final String USER_SIGN_KEY = "sign:";
+    public static final Double SHOP_DISTANCE = 5000.0;
 
     public static final String ORDER_QUEUE_NAME = "stream.orders";
+
 }

@@ -1,9 +1,11 @@
 import com.hmdp.HmDianPingApplication;
 import com.hmdp.entity.Shop;
 import com.hmdp.service.impl.ShopServiceImpl;
+import com.hmdp.service.impl.ShopTypeServiceImpl;
 import com.hmdp.utils.CacheClient;
 import com.hmdp.utils.RedisIdWorker;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.geo.Point;
 import org.springframework.data.redis.connection.RedisGeoCommands;
@@ -15,6 +17,7 @@ import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -33,6 +36,7 @@ public class RedisTest {
     private RedisIdWorker redisIdWorker;
     @Resource
     private StringRedisTemplate stringRedisTemplate;
+
 
     @Test
     public void testSaveShop() throws InterruptedException {
@@ -73,35 +77,32 @@ public class RedisTest {
     }
 
     @Test
-    public void testLoadShopData() {
-        //查询店铺信息
-        List<Shop> list = shopService.list();
-        //分组
-        Map<Long, List<Shop>> map = list.stream().collect(Collectors.groupingBy(Shop::getTypeId));
-        //分批写入
-        for (Map.Entry<Long, List<Shop>> longListEntry : map.entrySet()) {
-            //获取类型id
-            Long typeId = longListEntry.getKey();
-            //获取店铺集合
-            List<Shop> value = longListEntry.getValue();
-            List<RedisGeoCommands.GeoLocation<String>> locations=new ArrayList<>(value.size());
-            //写入redis
-            String key = SHOP_GEO_KEY + typeId;
-            /*for (Shop shop : value) {
-                Double x = shop.getX();
-                Double y = shop.getY();
-                stringRedisTemplate.opsForGeo()
-                        .add(key
-                                , new Point(x, y)
-                                , shop.getId().toString());
-            }*/
-            for (Shop shop : value) {
-                locations.add(new RedisGeoCommands.GeoLocation<>(shop.getId().toString(),new Point(shop.getX(),shop.getY())));
+    public void addShopGeo(){
+        // 获取店铺列表
+        List<Shop> shops = shopService.list();
+        // for (Shop shop : shops){
+        //     // 根据店铺类型分组，添加到Redis（单条添加方式）
+        //     stringRedisTemplate.opsForGeo().add(
+        //             "shop:geo:"+shop.getTypeId(),
+        //             new Point(shop.getX(),shop.getY()),
+        //             shop.getId().toString()
+        //     );
+        // }
+        // 批量添加方式
+        Map<Long, List<Shop>> shopTypeByGroup = shops.stream().collect(Collectors.groupingBy(Shop::getTypeId));
+        for (Map.Entry<Long, List<Shop>> entry : shopTypeByGroup.entrySet()) {
+            List<RedisGeoCommands.GeoLocation<String>> geoLocations = new ArrayList<>(entry.getValue().size());
+            // 存储店铺经纬度信息
+            for (Shop shop1 : entry.getValue()){
+                geoLocations.add(new RedisGeoCommands.GeoLocation<>(
+                        shop1.getId().toString(),
+                        new Point(shop1.getX(), shop1.getY())
+                ));
             }
-            stringRedisTemplate.opsForGeo().add(key,locations);
+            // 分组存入Redis
+            stringRedisTemplate.opsForGeo().geoAdd(SHOP_GEO_KEY + entry.getKey(), geoLocations);
         }
     }
-
     @Test
     public void testHyperLogLog(){
         String[] values=new String[1000];

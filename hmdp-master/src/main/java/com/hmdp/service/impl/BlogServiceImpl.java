@@ -190,8 +190,7 @@ public class BlogServiceImpl extends ServiceImpl<BlogMapper, Blog> implements IB
         int offsetNum = 1;
         for (ZSetOperations.TypedTuple<String> typedTuple : typedTuples){
             // 获取blogId
-            Long blogId = Long.valueOf(typedTuple.getValue());
-            ids.add(blogId);
+            ids.add(Long.valueOf(typedTuple.getValue()));
             // 计算offset，最小时间戳相同的blog数量
             long time = typedTuple.getScore().longValue();
             if(minTime == time){
@@ -201,11 +200,10 @@ public class BlogServiceImpl extends ServiceImpl<BlogMapper, Blog> implements IB
                 offsetNum = 1;
             }
         }
-        ArrayList<Blog> blogs = new ArrayList<Blog>(ids.size());
-        for (Long id : ids){
-            // 获取Blog内容
-            Blog blog = getById(id);
-            blogs.add(blog);
+        // 获取Blog内容
+        String idstr = StrUtil.join(",", ids);
+        List<Blog> blogs = lambdaQuery().in(Blog::getId, ids).last("ORDER BY FIELD(id," + idstr + ")").list();
+        for (Blog blog : blogs){
             // 查询Blog有关用户
             queryBlogUser(blog);
             // 获取当前用户是否点赞
