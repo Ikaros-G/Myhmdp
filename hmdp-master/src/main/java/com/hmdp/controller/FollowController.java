@@ -20,15 +20,15 @@ import javax.annotation.Resource;
 public class FollowController {
     @Resource
     private IFollowService followService;
-    @PutMapping("/{id}/{isFollow}")
-    public Result follow(@PathVariable("id")Long followUserId
-            ,@PathVariable("isFollow")Boolean isFollow) {
-        return followService.follow(followUserId,isFollow);
-    }
 
+
+    @PutMapping("/{id}/{isFollow}")
+    public Result Follow(@PathVariable Long id, @PathVariable Boolean isFollow){
+        return followService.follow(id, isFollow);
+    }
     @GetMapping("/or/not/{id}")
-    public Result isFollow(@PathVariable("id")Long followUserId) {
-        return followService.isFollow(followUserId);
+    public Result isFollow(@PathVariable Long id){
+        return followService.isFollow(id);
     }
 
     @GetMapping("/common/{id}")

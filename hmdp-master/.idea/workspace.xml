@@ -4,18 +4,21 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6ba2dd4a-f126-4df7-ba82-9fc9067b693c" name="更改" comment="异步秒杀优惠券">
+    <list default="true" id="6ba2dd4a-f126-4df7-ba82-9fc9067b693c" name="更改" comment="异步秒杀优惠券(消息队列)">
       <change beforePath="$PROJECT_DIR$/../Redis-x64-5.0.14/dump.rdb" beforeDir="false" afterPath="$PROJECT_DIR$/../Redis-x64-5.0.14/dump.rdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/data_sources_history.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/data_sources_history.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/hmdp/constants/RedisConstants.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hmdp/constants/RedisConstants.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/hmdp/service/impl/VoucherOrderServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hmdp/service/impl/VoucherOrderServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/hmdp/constants/SystemConstants.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hmdp/constants/SystemConstants.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/hmdp/controller/FollowController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hmdp/controller/FollowController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/hmdp/service/impl/BlogServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hmdp/service/impl/BlogServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/hmdp/service/impl/FollowServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hmdp/service/impl/FollowServiceImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/application.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/seckill.lua" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/seckill.lua" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/application.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/application.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hmdp/controller/FollowController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hmdp/controller/FollowController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hmdp/controller/UploadController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hmdp/controller/UploadController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hmdp/service/impl/BlogServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hmdp/service/impl/BlogServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hmdp/service/impl/FollowServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hmdp/service/impl/FollowServiceImpl.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/com/hmdp/service/impl/VoucherOrderServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hmdp/service/impl/VoucherOrderServiceImpl.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/seckill.lua" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/seckill.lua" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../nginx-1.18.0/logs/access.log" beforeDir="false" afterPath="$PROJECT_DIR$/../nginx-1.18.0/logs/access.log" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../nginx-1.18.0/logs/error.log" beforeDir="false" afterPath="$PROJECT_DIR$/../nginx-1.18.0/logs/error.log" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../nginx-1.18.0/logs/nginx.pid" beforeDir="false" afterPath="$PROJECT_DIR$/../nginx-1.18.0/logs/nginx.pid" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -63,6 +66,7 @@
     "JUnit.RedisTest.testIdWorker.executor": "Run",
     "JUnit.RedisTest.testLoadShopData.executor": "Run",
     "JUnit.RedisTest.testSaveShop.executor": "Run",
+    "JavaMethodFindUsagesOptions.isOverridingMethods": "true",
     "Maven.hmdp [compile].executor": "Run",
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RequestMappingsPanelOrder0": "0",
@@ -212,7 +216,8 @@
       <updated>1778496650899</updated>
       <workItem from="1778496653218" duration="2404000" />
       <workItem from="1778499095112" duration="2283000" />
-      <workItem from="1778546470276" duration="121720000" />
+      <workItem from="1778546470276" duration="135317000" />
+      <workItem from="1779495772857" duration="10789000" />
     </task>
     <task id="LOCAL-00001" summary="完成短信登录功能">
       <option name="closed" value="true" />
@@ -302,7 +307,23 @@
       <option name="project" value="LOCAL" />
       <updated>1779189682002</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="异步秒杀优惠券(消息队列)">
+      <option name="closed" value="true" />
+      <created>1779271062546</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1779271062546</updated>
+    </task>
+    <task id="LOCAL-00013" summary="异步秒杀优惠券(消息队列)">
+      <option name="closed" value="true" />
+      <created>1779271174524</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1779271174524</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -330,6 +351,7 @@
     <MESSAGE value="Lua脚本实现锁释放原子性" />
     <MESSAGE value="基础Redission锁" />
     <MESSAGE value="异步秒杀优惠券" />
-    <option name="LAST_COMMIT_MESSAGE" value="异步秒杀优惠券" />
+    <MESSAGE value="异步秒杀优惠券(消息队列)" />
+    <option name="LAST_COMMIT_MESSAGE" value="异步秒杀优惠券(消息队列)" />
   </component>
 </project>
