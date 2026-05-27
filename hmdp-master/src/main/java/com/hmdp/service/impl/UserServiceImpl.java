@@ -125,43 +125,38 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     @Override
     public Result signCount() {
-        //获取当前登陆用户
-        Long id = UserHolder.getUser().getId();
-        //获取日期
+        // 获取当前用户id
+        Long userId = UserHolder.getUser().getId();
+        // 获取当前日期
         LocalDateTime now = LocalDateTime.now();
-        //拼接key
-        String yyyyMM = now.format(DateTimeFormatter.ofPattern("yyyy:MM:"));
-        String key = USER_SIGN_KEY +yyyyMM+ id;
-        //获取今天是本月的第几天
+        String nowMMformat = now.format(DateTimeFormatter.ofPattern(":yyyy/MM"));
+        // 获取今天是本月的第几天
         int dayOfMonth = now.getDayOfMonth();
-        //获取截至本月今天的所有签到记录
-        List<Long> result = stringRedisTemplate.opsForValue().bitField(key
-                , BitFieldSubCommands
-                        .create()
-                        .get(BitFieldSubCommands.BitFieldType
-                                .unsigned(dayOfMonth))
-                        .valueAt(0)
-        );
-        if (result==null||result.isEmpty()){
+        // 获取到今天为止所有的签到记录
+        List<Long> signEndToday = stringRedisTemplate.opsForValue().
+                bitField(USER_SIGN_KEY + userId + nowMMformat,
+                        BitFieldSubCommands.create().get(BitFieldSubCommands.BitFieldType.unsigned(dayOfMonth)).valueAt(0));
+        // 判断是否为空
+        if (signEndToday == null || signEndToday.isEmpty()){
             return Result.ok(0);
         }
-        Long num = result.get(0);
-        if (num==null||num==0){
+        // 判断到目前为止是否未签到
+        Long result = signEndToday.get(0);
+        int count = 0;
+        if (result == null || result == 0){
             return Result.ok(0);
         }
-        //转二进制字符串
-        String binaryString = Long.toBinaryString(num);
-        //计算连续签到天数
-        int count=0;
-        for (int i = binaryString.length()-1; i >=0; i--) {
-            if (binaryString.charAt(i)=='1'){
-                count++;
-            }
-            else {
+        while (true){
+            // 获取最后一天的签到记录
+            if((result & 1) == 0){
+                // 判断是否为未签,未签退出循环，连续签到结束
                 break;
             }
+            // 如果签到计数加1，签到记录右移一位
+            count = count + 1;
+            result = result >> 1;
         }
-        //返回
+        // 返回总签到数
         return Result.ok(count);
     }
 
