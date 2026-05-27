@@ -15,6 +15,7 @@ import com.hmdp.service.IUserService;
 import com.hmdp.utils.RegexUtils;
 import com.hmdp.utils.UserHolder;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
 import org.springframework.data.redis.connection.BitFieldSubCommands;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
@@ -105,20 +106,20 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         return Result.ok(token);
     }
 
-
     @Override
     public Result sign() {
-        //获取当前登陆用户
-        Long id = UserHolder.getUser().getId();
-        //获取日期
+        // 获取当前用户id
+        Long userId = UserHolder.getUser().getId();
+        // 获取当前日期
         LocalDateTime now = LocalDateTime.now();
-        //拼接key
-        String yyyyMM = now.format(DateTimeFormatter.ofPattern("yyyy:MM:"));
-        String key = USER_SIGN_KEY +yyyyMM+ id;
-        //获取今天是本月的第几天
+        String nowday = now.format(DateTimeFormatter.ofPattern(":yyyy/MM"));
+        // 获取今天是本月的第几天
         int dayOfMonth = now.getDayOfMonth();
-        //写了redis
-        stringRedisTemplate.opsForValue().setBit(key,dayOfMonth-1,true);
+        //签到
+        Boolean issuccess = stringRedisTemplate.opsForValue().setBit(USER_SIGN_KEY + userId + nowday, dayOfMonth - 1, true);
+        if (!issuccess){
+            return Result.fail("签到失败");
+        }
         return Result.ok();
     }
 

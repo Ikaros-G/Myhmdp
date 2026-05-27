@@ -81,7 +81,7 @@ public class ShopServiceImpl extends ServiceImpl<ShopMapper, Shop> implements IS
         return Result.ok();
     }
 
-    @Override
+
     /**
      * 根据店铺类型分页查询，支持按距离排序
      * <p>当未提供经纬度时，按类型简单分页查询；
@@ -93,6 +93,7 @@ public class ShopServiceImpl extends ServiceImpl<ShopMapper, Shop> implements IS
      * @param y       用户纬度（可选，不为 null 时启用距离排序）
      * @return 包含店铺列表的分页结果
      */
+    @Override
     public Result queryShopByType(Integer typeId, Integer current, Double x, Double y) {
 
         // 未传入经纬度：按类型普通分页
@@ -106,6 +107,11 @@ public class ShopServiceImpl extends ServiceImpl<ShopMapper, Shop> implements IS
         int from = (current - 1) * SystemConstants.MAX_PAGE_SIZE;
         int end = current * SystemConstants.MAX_PAGE_SIZE;
 
+        // // 分页查询指定范围内的店铺 (6.2以上版本)
+        // GeoResults<RedisGeoCommands.GeoLocation<String>> shoplist = stringRedisTemplate.opsForGeo().search(SHOP_GEO_KEY, GeoReference.fromCoordinate(x, y),
+        //         new Distance(SHOP_DISTANCE),
+        //         RedisGeoCommands.GeoSearchCommandArgs.newGeoSearchArgs().limit(end));       // 只能获取从第一页到当前页的全部店铺数据
+
         // 查询 GEO：从指定坐标向外搜索，获取 end 条记录（因 Redis 不支持分页偏移，只能一次查够）
         GeoResults<RedisGeoCommands.GeoLocation<String>> shoplist = stringRedisTemplate.opsForGeo()
                 .radius(
@@ -117,21 +123,17 @@ public class ShopServiceImpl extends ServiceImpl<ShopMapper, Shop> implements IS
                                 .limit(end)
                 );
 
-        // 无结果时直接返回空
-        if (shoplist == null || shoplist.getContent().isEmpty()) {
-            return Result.ok();
-        }
 
-        // 内存中截取当前页数据（跳过 from 之前的记录）
+        // 无结果或者shoplist长度不足from页时直接返回空
         List<GeoResult<RedisGeoCommands.GeoLocation<String>>> list = shoplist.getContent();
-        if (list.size() <= from) {
+        if (shoplist == null || list.isEmpty() || list.size() <= from) {
             return Result.ok(Collections.emptyList());
         }
-
-        // 提取当前页店铺 ID 及对应的距离信息
+        // 内存中截取当前页数据（跳过 from 之前的记录）
         Map<String, Distance> distanceMap = new HashMap<>(shoplist.getContent().size());
         List<Long> shopIds = new ArrayList<>(shoplist.getContent().size());
         list.stream().skip(from).forEach(geoResult -> {
+            // 提取当前页店铺 ID 及对应的距离信息
             String shopId = geoResult.getContent().getName();
             shopIds.add(Long.valueOf(shopId));
             distanceMap.put(shopId, geoResult.getDistance());
@@ -147,7 +149,6 @@ public class ShopServiceImpl extends ServiceImpl<ShopMapper, Shop> implements IS
         for (Shop shop : shops) {
             shop.setDistance(distanceMap.get(shop.getId().toString()).getValue());
         }
-
         return Result.ok(shops);
     }
 
